@@ -479,9 +479,6 @@
     </div>
 
     <script>
-        // ADMIN PASSWORD CONFIGURATION
-        const ADMIN_PASSWORD = 'weyken123'; // Change your password here
-
         // Initial Default Projects data
         const initialProjects = [
             {
@@ -523,33 +520,6 @@
             renderCategoryFilters();
             renderProjects();
             updateStats();
-        });
-
-        // Helper to check/verify admin password
-        function verifyAdminAccess() {
-            const isAuth = sessionStorage.getItem('cwk_admin_auth');
-            if (isAuth === 'true') {
-                return true;
-            }
-
-            const inputPassword = prompt("Enter Admin Password:");
-            if (inputPassword === ADMIN_PASSWORD) {
-                sessionStorage.setItem('cwk_admin_auth', 'true');
-                showToast('Admin access granted!');
-                return true;
-            } else if (inputPassword !== null) {
-                alert("Incorrect password! Only Chong Wey Ken can manage projects.");
-            }
-            return false;
-        }
-
-        // Keyboard Shortcut (Ctrl + Shift + A) to trigger admin access
-        document.addEventListener('keydown', function(e) {
-            if (e.ctrlKey && e.shiftKey && e.key === 'A') {
-                if (verifyAdminAccess()) {
-                    openAddProjectModal();
-                }
-            }
         });
 
         // Theme Toggle Functionality
@@ -683,11 +653,9 @@
             `).join('');
         }
 
-        // Add Project Modal Handlers with Password Gate
+        // Add Project Modal Handlers
         function openAddProjectModal() {
-            if (verifyAdminAccess()) {
-                document.getElementById('addProjectModal').classList.remove('hidden');
-            }
+            document.getElementById('addProjectModal').classList.remove('hidden');
         }
 
         function closeAddProjectModal() {
@@ -727,18 +695,12 @@
             e.target.reset();
         }
 
-        // Password Protected Delete Handler
         function deleteProject(id) {
-            if (!verifyAdminAccess()) {
-                return;
-            }
-            if (confirm("Are you sure you want to delete this project?")) {
-                projects = projects.filter(p => p.id !== id);
-                localStorage.setItem('cwk_portfolio_projects', JSON.stringify(projects));
-                renderProjects();
-                updateStats();
-                showToast('Project removed');
-            }
+            projects = projects.filter(p => p.id !== id);
+            localStorage.setItem('cwk_portfolio_projects', JSON.stringify(projects));
+            renderProjects();
+            updateStats();
+            showToast('Project removed');
         }
 
         // Drive Modal Preview logic
