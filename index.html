@@ -653,10 +653,38 @@
             `).join('');
         }
 
-        // Add Project Modal Handlers
-        function openAddProjectModal() {
-            document.getElementById('addProjectModal').classList.remove('hidden');
-        }
+        // Secret Admin Password
+const ADMIN_PASSWORD = 'weyken123'; // Change this to your preferred password
+
+// Add Project Modal Handlers with Password Protection
+function openAddProjectModal() {
+    // Check if admin is already authenticated in this session
+    const isAuth = sessionStorage.getItem('cwk_admin_auth');
+
+    if (isAuth === 'true') {
+        document.getElementById('addProjectModal').classList.remove('hidden');
+        return;
+    }
+
+    // Prompt user for password
+    const userPassword = prompt("Enter Admin Password to add projects:");
+
+    if (userPassword === ADMIN_PASSWORD) {
+        sessionStorage.setItem('cwk_admin_auth', 'true');
+        document.getElementById('addProjectModal').classList.remove('hidden');
+        showToast('Admin access granted!');
+    } else if (userPassword !== null) {
+        alert("Incorrect password! Only Chong Wey Ken can add projects.");
+    }
+}
+
+// Optional: Keyboard shortcut (Ctrl + Shift + A) to open prompt
+document.addEventListener('keydown', function(e) {
+    if (e.ctrlKey && e.shiftKey && e.key === 'A') {
+        openAddProjectModal();
+    }
+});
+        
 
         function closeAddProjectModal() {
             document.getElementById('addProjectModal').classList.add('hidden');
